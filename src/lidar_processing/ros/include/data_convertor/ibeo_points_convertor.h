@@ -45,8 +45,9 @@ namespace lidar_processing
                 float min_height_z;
                 float max_height_z;
                 bool ground_measured;
-                float ground_height;
-                uint32_t num_of_points;
+                float ground_height_sum;
+                uint32_t num_of_target_points;
+                uint32_t num_of_ground_points;
 
                 GridCell(): distance_xy(0.0),
                             theta(0.0),
@@ -55,8 +56,9 @@ namespace lidar_processing
                             min_height_z(0.0),
                             max_height_z(100.0),
                             ground_measured(false),
-                            ground_height(0.0),
-                            num_of_points(0)
+                            ground_height_sum(0.0),
+                            num_of_target_points(0),
+                            num_of_ground_points(0)
                 {};
             };
 
@@ -68,14 +70,18 @@ namespace lidar_processing
 
             bool init(float max_range, float radial_resolution, float azimuth_resolution);
 
-            bool convert_points_to_stixels(sensor_msgs::PointCloud2::ConstPtr ros_points, StixelCylindricalDataContainer& stixel_container_);
+            bool convertPoints2Stixels(sensor_msgs::PointCloud2::ConstPtr ros_points, StixelCylindricalDataContainer& stixel_container_);
 
-            static bool convert_stixels_to_points(const StixelCylindricalDataContainer& stixel_container, sensor_msgs::PointCloud2& ros_points);
+            static bool convertStixels2Points(const StixelCylindricalDataContainer& stixel_container, sensor_msgs::PointCloud2& ros_points);
 
         private:
-            bool update_grid_from_points(pcl::PointCloud<PointXYZIRLDS>::ConstPtr points);
+            bool updateGridFromPoints(const pcl::PointCloud<PointXYZIRLDS>& points);
 
-            bool extract_data_from_grid(StixelCylindricalDataContainer& stixel_container);
+            bool extractDataFromGrid(StixelCylindricalDataContainer& stixel_container);
+
+            bool isGround(uint32_t flag) const;
+
+            bool isClutter(uint32_t flag) const;
 
             // cylindrical grid structure for pointcloud=>stixel
             std::vector<GridCell> grid_;

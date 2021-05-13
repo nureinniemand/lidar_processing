@@ -15,7 +15,7 @@ namespace lidar_processing
         return true;
     };
 
-    bool LidarSphericalDataContainer::get_cartesian_position(uint32_t idx, float& x, float& y, float& z) const
+    bool LidarSphericalDataContainer::getCartesianPosition(uint32_t idx, float& x, float& y, float& z) const
     {
         if (idx >= num_of_points_)
         {
@@ -31,7 +31,7 @@ namespace lidar_processing
         return true;
     };
 
-    bool LidarSphericalDataContainer::get_idx(uint32_t channel_id, uint32_t layer_id, uint32_t target_id, uint32_t& idx) const
+    bool LidarSphericalDataContainer::getIdx(uint32_t channel_id, uint32_t layer_id, uint32_t target_id, uint32_t& idx) const
     {
         if (channel_id >= num_of_channels_ || layer_id >= num_of_layers_ || target_id >= num_of_layers_ )
         {
@@ -44,7 +44,7 @@ namespace lidar_processing
         return true;
     };
 
-    bool LidarSphericalDataContainer::get_flag(uint32_t idx, uint8_t& flag) const
+    bool LidarSphericalDataContainer::getFlag(uint32_t idx, uint8_t& flag) const
     {
         if (idx >= num_of_points_)
         {
@@ -57,7 +57,7 @@ namespace lidar_processing
         return true;
     };
 
-    bool LidarSphericalDataContainer::get_points_inds_in_channel(uint32_t channel_id, std::vector<uint32_t>& ind_vec) const
+    bool LidarSphericalDataContainer::getPointsIndsInChannel(uint32_t channel_id, std::vector<uint32_t>& ind_vec) const
     {
         if (channel_id >= num_of_channels_)
         {

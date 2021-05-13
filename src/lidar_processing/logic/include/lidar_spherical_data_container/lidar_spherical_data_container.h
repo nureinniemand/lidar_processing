@@ -49,16 +49,16 @@ namespace lidar_processing
             bool init(uint32_t num_of_channels, uint32_t num_of_layers, uint32_t num_of_targets);
 
             // getter functions
-            inline uint32_t get_num_of_points() const {return num_of_points_;};
-            inline uint32_t get_num_of_channels() const {return num_of_channels_;};
-            inline uint32_t get_num_of_layers() const {return num_of_layers_;};
-            inline uint32_t get_num_of_targets() const {return num_of_targets_;};
+            inline uint32_t getNumOfPoints() const {return num_of_points_;};
+            inline uint32_t getNumOfChannels() const {return num_of_channels_;};
+            inline uint32_t getNumOfLayers() const {return num_of_layers_;};
+            inline uint32_t getNumOfTargets() const {return num_of_targets_;};
 
-            bool get_cartesian_position(uint32_t idx, float& x, float& y, float& z) const;
-            bool get_idx(uint32_t channel_id, uint32_t layer_id, uint32_t target_id, uint32_t& idx) const; 
-            bool get_flag(uint32_t idx, uint8_t& flag) const;
+            bool getCartesianPosition(uint32_t idx, float& x, float& y, float& z) const;
+            bool getIdx(uint32_t channel_id, uint32_t layer_id, uint32_t target_id, uint32_t& idx) const; 
+            bool getFlag(uint32_t idx, uint8_t& flag) const;
 
-            bool get_points_inds_in_channel(uint32_t channel_id, std::vector<uint32_t>& ind_vec) const;
+            bool getPointsIndsInChannel(uint32_t channel_id, std::vector<uint32_t>& ind_vec) const;
 
             // setter functions
             

@@ -41,6 +41,12 @@ namespace lidar_processing
                 {};
             };
 
+            enum StixelFlag: uint8_t
+            {
+                Flag_Target = 1,
+                Flag_LessSensitive = 1 << 2
+            };
+
             StixelCylindricalDataContainer(): num_of_channels_(0),
                                               num_of_layers_(0),
                                               num_of_targets_(0),
@@ -52,24 +58,30 @@ namespace lidar_processing
             bool init(float radial_resolution, float azimuth_resolution, uint32_t num_of_targets);
 
             // getter functions
-            inline uint32_t get_num_of_stixels() const {return num_of_stixels_;};
-            inline uint32_t get_num_of_channels() const {return num_of_channels_;};
-            inline uint32_t get_num_of_layers() const {return num_of_layers_;};
-            inline uint32_t get_num_of_targets() const {return num_of_targets_;};
-            inline float get_radial_resolution() const {return radial_resolution_;};
-            inline float get_azimuth_resolution() const {return azimuth_resolution_;};
+            inline uint32_t getNumOfStixels() const {return num_of_stixels_;};
+            inline uint32_t getCapacity() const {return stixel_capacity_;};
+            inline uint32_t getNumOfChannels() const {return num_of_channels_;};
+            inline uint32_t getNumOfLayers() const {return num_of_layers_;};
+            inline uint32_t getNumOfTargets() const {return num_of_targets_;};
+            inline float getRadialResolution() const {return radial_resolution_;};
+            inline float getAzimuthResolution() const {return azimuth_resolution_;};
 
-            bool get_idx(uint32_t channel_id, uint32_t layer_id, uint32_t target_id, uint32_t& idx) const; 
+            bool getIdx(uint32_t channel_id, uint32_t layer_id, uint32_t target_id, uint32_t& idx) const; 
 
-            bool get_inds_in_channel(uint32_t channel_id, std::vector<uint32_t>& inds) const;
+            bool getIndsInChannel(uint32_t channel_id, std::vector<uint32_t>& inds) const;
 
-            bool get_flag(uint32_t idx, uint8_t& flag) const;
-            bool get_distance_xy(uint32_t idx, float& distance_xy) const;
-            bool get_theta(uint32_t idx, float& theta) const;
-            bool get_cartesian_position(uint32_t idx, float& x, float& y, float& z) const;
-            bool get_dimension(uint32_t idx, float& height, float& width, float& length) const;
-            bool get_ground_height(uint32_t idx, float& ground_height) const;
-            bool get_segment_id(uint32_t idx, uint32_t& segment_id) const;
+            bool getFlag(uint32_t idx, uint8_t& flag) const;
+            bool getDistance_xy(uint32_t idx, float& distance_xy) const;
+            bool getTheta(uint32_t idx, float& theta) const;
+            bool getCartesianPosition(uint32_t idx, float& x, float& y, float& z) const;
+            bool getDimension(uint32_t idx, float& height, float& width, float& length) const;
+            bool getGroundHeight(uint32_t idx, float& ground_height) const;
+            bool getSegmentID(uint32_t idx, uint32_t& segment_id) const;
+
+            // setter functions
+            bool clear();
+
+            bool setStixel(uint32_t idx, const StixelTarget& stixel);
 
         private:
             std::vector<StixelTarget> stixels_;
@@ -77,6 +89,8 @@ namespace lidar_processing
             uint32_t num_of_channels_;
             uint32_t num_of_layers_;
             uint32_t num_of_targets_;
+            uint32_t stixel_capacity_;
+
             uint32_t num_of_stixels_;
 
             float radial_resolution_;
