@@ -68,7 +68,7 @@ namespace lidar_processing
                                    azimuth_resolution_(0.1)
             {};
 
-            bool init(float max_range, float radial_resolution, float azimuth_resolution);
+            bool init(const StixelCylindricalDataContainer& stixel_container, float max_range);
 
             bool convertPoints2Stixels(sensor_msgs::PointCloud2::ConstPtr ros_points, StixelCylindricalDataContainer& stixel_container_);
 

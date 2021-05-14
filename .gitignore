@@ -3,3 +3,5 @@ devel/
 logs/
 .vscode/
 .catkin_tools/
+src/CMakeLists.txt
+.catkin_workspace

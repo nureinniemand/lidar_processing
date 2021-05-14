@@ -8,23 +8,24 @@ namespace lidar_processing
     const float kMinResolution  = 0.01;
     const float kMinGridRange = 1.0;
 
-    bool IbeoPointsConvertor::init(float max_range, float radial_resolution, float azimuth_resolution)
+    bool IbeoPointsConvertor::init(const StixelCylindricalDataContainer& stixel_container, float max_range)
     {
-        if (radial_resolution < kMinResolution || azimuth_resolution < kMinResolution || max_range < kMinGridRange)
+        if (stixel_container.getRadialResolution() < kMinResolution 
+        || stixel_container.getAzimuthResolution() < kMinResolution 
+        || max_range < kMinGridRange)
         {
             return false;
         }
 
         max_range_ = max_range;
-        radial_resolution_ = radial_resolution;
-        azimuth_resolution_ = azimuth_resolution;
+        radial_resolution_ = stixel_container.getRadialResolution();
+        azimuth_resolution_ = stixel_container.getAzimuthResolution();
 
         num_of_cells_radial_ = static_cast<uint32_t>(max_range / radial_resolution_);
         num_of_channels_ = static_cast<uint32_t>(360.0 / azimuth_resolution_);
         num_of_cells_ = num_of_channels_ * num_of_cells_radial_;
 
-        grid_.clear();
-        grid_.resize(num_of_cells_);
+        grid_.resize(num_of_cells_, GridCell());
 
         return true;
     };
@@ -35,8 +36,8 @@ namespace lidar_processing
         if (fabs(stixel_container.getAzimuthResolution() - azimuth_resolution_) > kMinResolution ||
             fabs(stixel_container.getRadialResolution() - radial_resolution_) > kMinResolution)
         {
-            // need to re-init the stixel container based on convertor settings
-            init(azimuth_resolution_, radial_resolution_, stixel_container.getNumOfTargets());
+            // need to re-init the grid based on input stixel
+            init(stixel_container, max_range_);
         }
 
         pcl::PointCloud<PointXYZIRLDS> pcl_points;

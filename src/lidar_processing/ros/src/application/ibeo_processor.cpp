@@ -31,7 +31,7 @@ namespace lidar_processing
             return false;
         }
 
-        if (!pointcloud_convertor_.init(max_range, radial_resolution, azimuth_resolution))
+        if (!pointcloud_convertor_.init(stixels_, max_range))
         {
             return false;
         }
