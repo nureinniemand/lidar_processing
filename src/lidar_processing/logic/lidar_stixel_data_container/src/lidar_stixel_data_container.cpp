@@ -136,7 +136,7 @@ namespace lidar_processing
         return true;
     }
 
-    bool LidarStixelDataContainer::getSegmentID(uint32_t idx, uint32_t& segment_id) const
+    bool LidarStixelDataContainer::getSegmentId(uint32_t idx, uint32_t& segment_id) const
     {
         if (idx >= stixel_capacity_)
         {
@@ -177,6 +177,17 @@ namespace lidar_processing
             stixels_.at(idx) = stixel;
         }
 
+        return true;
+    }
+
+    bool LidarStixelDataContainer::setSegmentId(uint32_t idx, uint32_t segment_id)
+    {
+        if (idx >= stixel_capacity_)
+        {
+            return false;
+        }
+
+        stixels_.at(idx).segment_id = segment_id;
         return true;
     }
 

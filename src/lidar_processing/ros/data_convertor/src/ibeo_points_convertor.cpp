@@ -21,7 +21,7 @@ namespace lidar_processing
         radial_resolution_ = stixels_container.getRadialResolution();
         azimuth_resolution_ = stixels_container.getAzimuthResolution();
 
-        num_of_cells_radial_ = static_cast<uint32_t>(max_range / radial_resolution_);
+        num_of_cells_radial_ = static_cast<uint32_t>(max_range_ / radial_resolution_);
         num_of_channels_ = static_cast<uint32_t>(360.0 / azimuth_resolution_);
         num_of_cells_ = num_of_channels_ * num_of_cells_radial_;
 
@@ -75,7 +75,7 @@ namespace lidar_processing
                 point.label = static_cast<uint16_t>(flag);
 
                 uint32_t segment_id = 0;
-                stixel_container.getSegmentID(idx, segment_id);
+                stixel_container.getSegmentId(idx, segment_id);
                 point.segment_id = static_cast<uint16_t>(segment_id);
 
                 point.ring = 0;

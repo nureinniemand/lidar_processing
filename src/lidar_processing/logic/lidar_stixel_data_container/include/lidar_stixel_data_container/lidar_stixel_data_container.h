@@ -78,12 +78,13 @@ namespace lidar_processing
             bool getCartesianPosition(uint32_t idx, float& x, float& y, float& z) const;
             bool getDimension(uint32_t idx, float& height, float& width, float& length) const;
             bool getGroundHeight(uint32_t idx, float& ground_height) const;
-            bool getSegmentID(uint32_t idx, uint32_t& segment_id) const;
+            bool getSegmentId(uint32_t idx, uint32_t& segment_id) const;
 
             // setter functions
             bool clear();
 
             bool setStixel(uint32_t idx, const StixelTarget& stixel);
+            bool setSegmentId(uint32_t idx, uint32_t segment_id);
 
         private:
             std::vector<StixelTarget> stixels_;
