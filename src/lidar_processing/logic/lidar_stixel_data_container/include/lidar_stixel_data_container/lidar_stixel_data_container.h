@@ -48,14 +48,15 @@ namespace lidar_processing
             };
 
             LidarStixelDataContainer(): num_of_channels_(0),
-                                              num_of_layers_(0),
-                                              num_of_targets_(0),
-                                              num_of_stixels_(0),
-                                              radial_resolution_(0.1),
-                                              azimuth_resolution_(0.1)
+                                        num_of_layers_(0),
+                                        num_of_targets_(0),
+                                        num_of_stixels_(0),
+                                        radial_resolution_(0.1),
+                                        azimuth_resolution_(0.1),
+                                        max_range_(0.1)
             {};
 
-            bool init(float radial_resolution, float azimuth_resolution, uint32_t num_of_targets);
+            bool init(float radial_resolution, float azimuth_resolution, uint32_t num_of_targets, float max_range);
 
             // getter functions
             inline uint32_t getNumOfStixels() const {return num_of_stixels_;};
@@ -65,6 +66,7 @@ namespace lidar_processing
             inline uint32_t getNumOfTargets() const {return num_of_targets_;};
             inline float getRadialResolution() const {return radial_resolution_;};
             inline float getAzimuthResolution() const {return azimuth_resolution_;};
+            inline float getMaxRange() const {return max_range_;};
 
             bool getIdx(uint32_t channel_id, uint32_t layer_id, uint32_t target_id, uint32_t& idx) const; 
 
@@ -95,5 +97,7 @@ namespace lidar_processing
 
             float radial_resolution_;
             float azimuth_resolution_;
+
+            float max_range_;
     };
 }

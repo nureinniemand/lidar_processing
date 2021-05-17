@@ -8,15 +8,16 @@ namespace lidar_processing
 {
     const float kMinResolution  = 0.01;
 
-    bool LidarStixelDataContainer::init(float radial_resolution, float azimuth_resolution, uint32_t num_of_targets)
+    bool LidarStixelDataContainer::init(float radial_resolution, float azimuth_resolution, uint32_t num_of_targets, float max_range)
     {
-        if (radial_resolution < kMinResolution || azimuth_resolution < kMinResolution)
+        if (radial_resolution < kMinResolution || azimuth_resolution < kMinResolution || max_range < kMinResolution)
         {
             return false;
         }
 
         radial_resolution_ = radial_resolution;
         azimuth_resolution_ = azimuth_resolution;
+        max_range_ = max_range;
 
         num_of_channels_ = static_cast<uint32_t>(360.0 / radial_resolution_);
         num_of_targets_ = num_of_targets;

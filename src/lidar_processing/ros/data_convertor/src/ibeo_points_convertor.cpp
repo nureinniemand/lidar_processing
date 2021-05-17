@@ -8,16 +8,16 @@ namespace lidar_processing
     const float kMinResolution  = 0.01;
     const float kMinGridRange = 1.0;
 
-    bool IbeoPointsConvertor::init(const LidarStixelDataContainer& stixels_container, float max_range)
+    bool IbeoPointsConvertor::init(const LidarStixelDataContainer& stixels_container)
     {
         if (stixels_container.getRadialResolution() < kMinResolution 
         || stixels_container.getAzimuthResolution() < kMinResolution 
-        || max_range < kMinGridRange)
+        || stixels_container.getMaxRange() < kMinGridRange)
         {
             return false;
         }
 
-        max_range_ = max_range;
+        max_range_ = stixels_container.getMaxRange();
         radial_resolution_ = stixels_container.getRadialResolution();
         azimuth_resolution_ = stixels_container.getAzimuthResolution();
 

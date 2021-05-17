@@ -1,4 +1,5 @@
 #include "data_convertor/ibeo_points_convertor.h"
+#include "pointcloud_segmentation/pointcloud_segmentation.h"
 
 #include <ros/ros.h>
 #include <sensor_msgs/PointCloud2.h>
@@ -23,5 +24,6 @@ namespace lidar_processing
 
             LidarStixelDataContainer stixels_;
             IbeoPointsConvertor pointcloud_convertor_;
+            PointCloudSegementation pointcloud_segmentor_;
     };
 }
