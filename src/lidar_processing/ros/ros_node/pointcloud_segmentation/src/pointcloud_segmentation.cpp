@@ -1,4 +1,4 @@
-#include "application/ibeo_processor.h"
+#include "pointcloud_segmentation/pointcloud_segmentation.h"
 
 #include <chrono>
 #include <iostream>
@@ -6,11 +6,11 @@
 
 namespace lidar_processing
 {
-    bool IbeoProcessor::init()
+    bool PointCloudSegementation::init()
     {
         std::string ibeo_points_topic_in_name;
         nh_.param<std::string>("ibeo_points_topic_in", ibeo_points_topic_in_name, std::string("/raw/ibeo/point_cloud"));
-        pointcloud_sub_ = nh_.subscribe(ibeo_points_topic_in_name, 1, &IbeoProcessor::pointcloudCallback, this);
+        pointcloud_sub_ = nh_.subscribe(ibeo_points_topic_in_name, 1, &PointCloudSegementation::pointcloudCallback, this);
 
         std::string stixel_topic_out_name;
         nh_.param<std::string>("stixel_topic_out", stixel_topic_out_name, std::string("/raw/ibeo/stixels"));
@@ -31,7 +31,7 @@ namespace lidar_processing
             return false;
         }
 
-        if (!pointcloud_convertor_.init(max_range, radial_resolution, azimuth_resolution))
+        if (!pointcloud_convertor_.init(stixels_, max_range))
         {
             return false;
         }
@@ -39,13 +39,13 @@ namespace lidar_processing
         return true;
     }
 
-    bool IbeoProcessor::run()
+    bool PointCloudSegementation::run()
     {
         ros::spin();
         return true;
     }
 
-    void IbeoProcessor::pointcloudCallback(sensor_msgs::PointCloud2::ConstPtr ros_points)
+    void PointCloudSegementation::pointcloudCallback(sensor_msgs::PointCloud2::ConstPtr ros_points)
     {
         auto start = std::chrono::high_resolution_clock::now();
 

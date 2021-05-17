@@ -1,4 +1,4 @@
-#include "stixel_cylindrical_data_container/stixel_cylindrical_data_container.h"
+#include "lidar_stixel_data_container/lidar_stixel_data_container.h"
 
 #include <iostream>
 #include <math.h>
@@ -8,7 +8,7 @@ namespace lidar_processing
 {
     const float kMinResolution  = 0.01;
 
-    bool StixelCylindricalDataContainer::init(float radial_resolution, float azimuth_resolution, uint32_t num_of_targets)
+    bool LidarStixelDataContainer::init(float radial_resolution, float azimuth_resolution, uint32_t num_of_targets)
     {
         if (radial_resolution < kMinResolution || azimuth_resolution < kMinResolution)
         {
@@ -30,7 +30,7 @@ namespace lidar_processing
         return true;
     }
 
-    bool StixelCylindricalDataContainer::getIdx(uint32_t channel_id, uint32_t layer_id, uint32_t target_id, uint32_t& idx) const
+    bool LidarStixelDataContainer::getIdx(uint32_t channel_id, uint32_t layer_id, uint32_t target_id, uint32_t& idx) const
     {
         if (channel_id >= num_of_channels_ || layer_id >= num_of_layers_ || target_id >= num_of_targets_)
         {
@@ -41,7 +41,7 @@ namespace lidar_processing
         return true;
     }
 
-    bool StixelCylindricalDataContainer::getIndsInChannel(uint32_t channel_id, std::vector<uint32_t>& inds) const
+    bool LidarStixelDataContainer::getIndsInChannel(uint32_t channel_id, std::vector<uint32_t>& inds) const
     {
         if (channel_id >= num_of_channels_)
         {
@@ -65,7 +65,7 @@ namespace lidar_processing
         return true;
     }
 
-    bool StixelCylindricalDataContainer::getFlag(uint32_t idx, uint8_t& flag) const
+    bool LidarStixelDataContainer::getFlag(uint32_t idx, uint8_t& flag) const
     {
         if (idx >= stixel_capacity_)
         {
@@ -76,7 +76,7 @@ namespace lidar_processing
         return true;
     }
 
-    bool StixelCylindricalDataContainer::getDistance_xy(uint32_t idx, float& distance_xy) const
+    bool LidarStixelDataContainer::getDistance_xy(uint32_t idx, float& distance_xy) const
     {
         if (idx >= stixel_capacity_)
         {
@@ -87,7 +87,7 @@ namespace lidar_processing
         return true;
     }
 
-    bool StixelCylindricalDataContainer::getTheta(uint32_t idx, float& theta) const
+    bool LidarStixelDataContainer::getTheta(uint32_t idx, float& theta) const
     {
         if (idx >= stixel_capacity_)
         {
@@ -98,7 +98,7 @@ namespace lidar_processing
         return true;
     }
 
-    bool StixelCylindricalDataContainer::getCartesianPosition(uint32_t idx, float& x, float& y, float& z) const
+    bool LidarStixelDataContainer::getCartesianPosition(uint32_t idx, float& x, float& y, float& z) const
     {
         if (idx >= stixel_capacity_)
         {
@@ -111,7 +111,7 @@ namespace lidar_processing
         return true;
     }
 
-    bool StixelCylindricalDataContainer::getDimension(uint32_t idx, float& height, float& width, float& length) const
+    bool LidarStixelDataContainer::getDimension(uint32_t idx, float& height, float& width, float& length) const
     {
         if (idx >= stixel_capacity_)
         {
@@ -124,7 +124,7 @@ namespace lidar_processing
         return true;
     }
 
-    bool StixelCylindricalDataContainer::getGroundHeight(uint32_t idx, float& ground_height) const
+    bool LidarStixelDataContainer::getGroundHeight(uint32_t idx, float& ground_height) const
     {
         if (idx >= stixel_capacity_ || !stixels_.at(idx).ground_measured)
         {
@@ -135,7 +135,7 @@ namespace lidar_processing
         return true;
     }
 
-    bool StixelCylindricalDataContainer::getSegmentID(uint32_t idx, uint32_t& segment_id) const
+    bool LidarStixelDataContainer::getSegmentID(uint32_t idx, uint32_t& segment_id) const
     {
         if (idx >= stixel_capacity_)
         {
@@ -146,14 +146,14 @@ namespace lidar_processing
         return true;
     }
 
-    bool StixelCylindricalDataContainer::clear()
+    bool LidarStixelDataContainer::clear()
     {
         num_of_stixels_ = 0;
         memset(stixels_.data(), 0, sizeof(StixelTarget) * stixels_.size());
         return true;
     }
 
-    bool StixelCylindricalDataContainer::setStixel(uint32_t idx, const StixelTarget& stixel)
+    bool LidarStixelDataContainer::setStixel(uint32_t idx, const StixelTarget& stixel)
     {
         if (idx >= stixel_capacity_)
         {

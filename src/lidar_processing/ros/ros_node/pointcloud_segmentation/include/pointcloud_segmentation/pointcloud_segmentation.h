@@ -5,10 +5,10 @@
 
 namespace lidar_processing
 {
-    class IbeoProcessor
+    class PointCloudSegementation
     {
         public:
-            IbeoProcessor() : nh_("~") {};
+            PointCloudSegementation() : nh_("~") {};
 
             bool init();
 
@@ -21,7 +21,7 @@ namespace lidar_processing
             ros::Subscriber pointcloud_sub_;
             ros::Publisher stixel_pub_;
 
-            StixelCylindricalDataContainer stixels_;
+            LidarStixelDataContainer stixels_;
             IbeoPointsConvertor pointcloud_convertor_;
     };
 }

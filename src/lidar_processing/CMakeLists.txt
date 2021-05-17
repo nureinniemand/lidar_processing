@@ -15,20 +15,11 @@ find_package(
                sensor_msgs
 )   
 
-include_directories(ros/include logic/include ${catkin_INCLUDE_DIRS})
-
 catkin_package(
   CATKIN_DEPENDS
   INCLUDE_DIRS
   LIBRARIES
   roscpp
-  ibeo_processor)
+  pointcloud_segmentation)
 
-add_library(data_convertor ros/src/data_convertor/ibeo_points_convertor.cpp)
-target_link_libraries(data_convertor ${catkin_LIBRARIES} stixel_cylindrical_data_container)
-
-add_executable(ibeo_processor ros/src/application/main.cpp ros/src/application/ibeo_processor.cpp )
-target_link_libraries(ibeo_processor ${catkin_LIBRARIES} data_convertor)
-
-
-
+add_subdirectory(ros)

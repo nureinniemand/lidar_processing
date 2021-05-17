@@ -10,7 +10,7 @@
 
 namespace lidar_processing
 {
-    class StixelCylindricalDataContainer
+    class LidarStixelDataContainer
     {
         public:
             struct StixelTarget
@@ -47,7 +47,7 @@ namespace lidar_processing
                 Flag_LessSensitive = 1 << 2
             };
 
-            StixelCylindricalDataContainer(): num_of_channels_(0),
+            LidarStixelDataContainer(): num_of_channels_(0),
                                               num_of_layers_(0),
                                               num_of_targets_(0),
                                               num_of_stixels_(0),

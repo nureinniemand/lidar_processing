@@ -1,0 +1,3 @@
+add_library(data_convertor src/ibeo_points_convertor.cpp)
+target_include_directories(data_convertor PUBLIC include ${catkin_INCLUDE_DIRS})
+target_link_libraries(data_convertor ${catkin_LIBRARIES} lidar_stixel_data_container)
