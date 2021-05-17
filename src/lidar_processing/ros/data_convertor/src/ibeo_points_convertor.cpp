@@ -8,18 +8,18 @@ namespace lidar_processing
     const float kMinResolution  = 0.01;
     const float kMinGridRange = 1.0;
 
-    bool IbeoPointsConvertor::init(const StixelCylindricalDataContainer& stixel_container, float max_range)
+    bool IbeoPointsConvertor::init(const LidarStixelDataContainer& stixels_container)
     {
-        if (stixel_container.getRadialResolution() < kMinResolution 
-        || stixel_container.getAzimuthResolution() < kMinResolution 
-        || max_range < kMinGridRange)
+        if (stixels_container.getRadialResolution() < kMinResolution 
+        || stixels_container.getAzimuthResolution() < kMinResolution 
+        || stixels_container.getMaxRange() < kMinGridRange)
         {
             return false;
         }
 
-        max_range_ = max_range;
-        radial_resolution_ = stixel_container.getRadialResolution();
-        azimuth_resolution_ = stixel_container.getAzimuthResolution();
+        max_range_ = stixels_container.getMaxRange();
+        radial_resolution_ = stixels_container.getRadialResolution();
+        azimuth_resolution_ = stixels_container.getAzimuthResolution();
 
         num_of_cells_radial_ = static_cast<uint32_t>(max_range / radial_resolution_);
         num_of_channels_ = static_cast<uint32_t>(360.0 / azimuth_resolution_);
@@ -30,14 +30,14 @@ namespace lidar_processing
         return true;
     };
 
-    bool IbeoPointsConvertor::convertPoints2Stixels(sensor_msgs::PointCloud2::ConstPtr ros_points, StixelCylindricalDataContainer& stixel_container)
+    bool IbeoPointsConvertor::convertPoints2Stixels(sensor_msgs::PointCloud2::ConstPtr ros_points, LidarStixelDataContainer& stixel_container)
     {
         // check the meta setting of convertor and container
         if (fabs(stixel_container.getAzimuthResolution() - azimuth_resolution_) > kMinResolution ||
             fabs(stixel_container.getRadialResolution() - radial_resolution_) > kMinResolution)
         {
-            // need to re-init the grid based on input stixel
-            init(stixel_container, max_range_);
+            // need to re-init the grids based on stixel_container
+            init(stixel_container);
         }
 
         pcl::PointCloud<PointXYZIRLDS> pcl_points;
@@ -56,7 +56,7 @@ namespace lidar_processing
         return true;
     };
 
-    bool IbeoPointsConvertor::convertStixels2Points(const StixelCylindricalDataContainer& stixel_container, sensor_msgs::PointCloud2& ros_points)
+    bool IbeoPointsConvertor::convertStixels2Points(const LidarStixelDataContainer& stixel_container, sensor_msgs::PointCloud2& ros_points)
     {
         pcl::PointCloud<PointXYZIRLDS> pcl_points(stixel_container.getNumOfStixels(), 1U);
 
@@ -67,7 +67,7 @@ namespace lidar_processing
         {
             uint8_t flag = 0;
             stixel_container.getFlag(idx, flag);
-            if (flag & StixelCylindricalDataContainer::Flag_Target)
+            if (flag & LidarStixelDataContainer::Flag_Target)
             {
                 PointXYZIRLDS& point = pcl_points.at(num_of_points++);
                 stixel_container.getCartesianPosition(idx, point.x, point.y, point.z);
@@ -139,7 +139,7 @@ namespace lidar_processing
         return true;
     }
 
-    bool IbeoPointsConvertor::extractDataFromGrid(StixelCylindricalDataContainer& stixel_container)
+    bool IbeoPointsConvertor::extractDataFromGrid(LidarStixelDataContainer& stixel_container)
     {
         // the meta setting of stixel and grid should be matched before this function.
         stixel_container.clear();
@@ -163,8 +163,8 @@ namespace lidar_processing
                 const auto& grid = grid_.at(grid_channel_base_idx + idx_in_channel);
                 if (grid.num_of_target_points) // valid cell
                 {
-                    StixelCylindricalDataContainer::StixelTarget stixel;
-                    stixel.flag = StixelCylindricalDataContainer::Flag_Target;
+                    LidarStixelDataContainer::StixelTarget stixel;
+                    stixel.flag = LidarStixelDataContainer::Flag_Target;
                     stixel.distance_xy = grid.distance_xy;
                     stixel.theta = grid.theta;
                     stixel.cartesian_x = grid.cartesian_x;

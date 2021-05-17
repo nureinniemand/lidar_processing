@@ -1,4 +1,4 @@
-#include "application/ibeo_processor.h"
+#include "pointcloud_segmentation/pointcloud_segmentation.h"
 
 #include <chrono>
 #include <iostream>
@@ -6,11 +6,11 @@
 
 namespace lidar_processing
 {
-    bool IbeoProcessor::init()
+    bool PointCloudSegementation::init()
     {
         std::string ibeo_points_topic_in_name;
         nh_.param<std::string>("ibeo_points_topic_in", ibeo_points_topic_in_name, std::string("/raw/ibeo/point_cloud"));
-        pointcloud_sub_ = nh_.subscribe(ibeo_points_topic_in_name, 1, &IbeoProcessor::pointcloudCallback, this);
+        pointcloud_sub_ = nh_.subscribe(ibeo_points_topic_in_name, 1, &PointCloudSegementation::pointcloudCallback, this);
 
         std::string stixel_topic_out_name;
         nh_.param<std::string>("stixel_topic_out", stixel_topic_out_name, std::string("/raw/ibeo/stixels"));
@@ -26,12 +26,12 @@ namespace lidar_processing
         float max_range = 50.0;
         nh_.param<float>("max_range", max_range, 80.0);
 
-        if (!stixels_.init(radial_resolution, azimuth_resolution, num_of_targets))
+        if (!stixels_.init(radial_resolution, azimuth_resolution, num_of_targets, max_range))
         {
             return false;
         }
 
-        if (!pointcloud_convertor_.init(stixels_, max_range))
+        if (!pointcloud_convertor_.init(stixels_))
         {
             return false;
         }
@@ -39,16 +39,15 @@ namespace lidar_processing
         return true;
     }
 
-    bool IbeoProcessor::run()
+    bool PointCloudSegementation::run()
     {
         ros::spin();
         return true;
     }
 
-    void IbeoProcessor::pointcloudCallback(sensor_msgs::PointCloud2::ConstPtr ros_points)
+    void PointCloudSegementation::pointcloudCallback(sensor_msgs::PointCloud2::ConstPtr ros_points)
     {
         auto start = std::chrono::high_resolution_clock::now();
-
         std::cout << "Starting converting points to stixels..." << std::endl;
 
         if (!pointcloud_convertor_.convertPoints2Stixels(ros_points, stixels_))
@@ -56,11 +55,11 @@ namespace lidar_processing
             return;
         }
 
-        auto end = std::chrono::high_resolution_clock::now();
-        auto elapsed = end - start;
+        auto elapsed = std::chrono::high_resolution_clock::now() - start;
         auto elapsed_ms = std::chrono::duration_cast< std::chrono::milliseconds >(elapsed).count();
         std::cout << "point2stixel" << " => time cost: " << elapsed_ms << " milliseconds " << std::endl;
 
+        start = std::chrono::high_resolution_clock::now();
         std::cout << "Starting converting stixels to points..." << std::endl;
 
         sensor_msgs::PointCloud2 msg_to_pub;
@@ -69,7 +68,7 @@ namespace lidar_processing
             return;
         }
 
-        elapsed = std::chrono::high_resolution_clock::now() - end;
+        elapsed = std::chrono::high_resolution_clock::now() - start;
         elapsed_ms = std::chrono::duration_cast< std::chrono::milliseconds >(elapsed).count();
         std::cout << "stixel2point" << " => time cost: " << elapsed_ms << " milliseconds " << std::endl;
 

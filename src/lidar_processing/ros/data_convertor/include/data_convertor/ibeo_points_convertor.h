@@ -8,7 +8,7 @@
 #include <pcl_conversions/pcl_conversions.h>
 #include <sensor_msgs/PointCloud2.h>
 
-#include "stixel_cylindrical_data_container/stixel_cylindrical_data_container.h"
+#include "lidar_stixel_data_container/lidar_stixel_data_container.h"
 
 struct PointXYZIRLDS
 {
@@ -70,14 +70,12 @@ namespace lidar_processing
 
             bool init(const StixelCylindricalDataContainer& stixel_container, float max_range);
 
-            bool convertPoints2Stixels(sensor_msgs::PointCloud2::ConstPtr ros_points, StixelCylindricalDataContainer& stixel_container_);
-
-            static bool convertStixels2Points(const StixelCylindricalDataContainer& stixel_container, sensor_msgs::PointCloud2& ros_points);
+            static bool convertStixels2Points(const LidarStixelDataContainer& stixel_container, sensor_msgs::PointCloud2& ros_points);
 
         private:
             bool updateGridFromPoints(const pcl::PointCloud<PointXYZIRLDS>& points);
 
-            bool extractDataFromGrid(StixelCylindricalDataContainer& stixel_container);
+            bool extractDataFromGrid(LidarStixelDataContainer& stixel_container);
 
             bool isGround(uint32_t flag) const;
 
