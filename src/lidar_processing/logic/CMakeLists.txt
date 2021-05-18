@@ -3,3 +3,6 @@ project(lidar_processing_logic)
 add_subdirectory(lidar_spherical_data_container)
 add_subdirectory(lidar_stixel_data_container)
 add_subdirectory(lidar_stixel_data_segmentation)
+
+add_subdirectory(grid)
+add_subdirectory(consistency_grid)
