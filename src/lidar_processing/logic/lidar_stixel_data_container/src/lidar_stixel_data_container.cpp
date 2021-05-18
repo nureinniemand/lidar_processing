@@ -19,7 +19,7 @@ namespace lidar_processing
         azimuth_resolution_ = azimuth_resolution;
         max_range_ = max_range;
 
-        num_of_channels_ = static_cast<uint32_t>(360.0 / radial_resolution_);
+        num_of_channels_ = static_cast<uint32_t>(360.0 / azimuth_resolution);
         num_of_targets_ = num_of_targets;
         num_of_layers_ = 1;
         stixel_capacity_ = num_of_channels_ * num_of_targets_ * num_of_layers_;

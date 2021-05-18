@@ -14,15 +14,15 @@ namespace lidar_processing
             LidarStixelDataSegmentation(): distance_scaling_factor_(0.0),
                                            radial_resolution_(0.1) {};
 
-            bool init(const LidarStixelDataContainer& stixels, uint32_t min_skippable_channel, uint32_t max_compare_distance);
+            bool init(const LidarStixelDataContainer& stixels, uint32_t min_skippable_channel, float max_compare_distance);
 
             bool process(LidarStixelDataContainer& stixels);
 
         private:
             // private helper functions for segmentation process
-            bool isInRange(float base_distance, float distance_to_cmp);
+            bool isInRange(float base_distance, float distance_to_cmp) const;
 
-            bool fuseSegmentId(std::set<uint32_t> related_segments);
+            bool fuseSegmentId(const std::set<uint32_t>& related_segments);
 
             // internal buffers for segmentation process
             std::vector<uint32_t> segmentation_linkage_lookup_;
