@@ -1,2 +1,2 @@
 add_subdirectory(pointcloud_segmentation)
-add_subdirectory(consistency_grid_map_update)
+add_subdirectory(consistency_grid_map_updator)
