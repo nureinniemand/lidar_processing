@@ -44,7 +44,6 @@ namespace lidar_processing
             enum StixelFlag: uint8_t
             {
                 Flag_Target = 1,
-                Flag_LessSensitive = 1 << 2
             };
 
             LidarStixelDataContainer(): num_of_channels_(0),

@@ -7,37 +7,38 @@
 #include <vector>
 #include <inttypes.h>
 #include <iostream>
+#include <limits>
 
 namespace lidar_processing
 {
-    template <typename CellType, typename PixelType, typename CellUpdator>
+    struct GridMetaData
+    {
+        uint32_t dim_x;
+        uint32_t dim_y;
+        double resolution;
+        double origin_x;
+        double origin_y;
+
+        GridMetaData(): dim_x(0),
+                        dim_y(0),
+                        resolution(0.0),
+                        origin_x(0.0),
+                        origin_y(0.0) {}
+    };
+    
+    template <typename CellType>
     class GridMap
     {
         public:
-            struct GridMetaData
-            {
-                uint32_t dim_x;
-                uint32_t dim_y;
-                double resolution;
-                double origin_x;
-                double origin_y;
 
-                GridMetaData(): dim_x(0),
-                                dim_y(0),
-                                resolution(0.0),
-                                origin_x(0.0),
-                                origin_y(0.0) {}
-            };
-
-            GridMap(): updated_(false) {};
+            GridMap(): initialized_(false) {};
 
             bool init(uint32_t dim_x, uint32_t dim_y, double resolution, double shift_distance)
             {
                 grid_meta_data_.dim_x = dim_x;
                 grid_meta_data_.dim_y = dim_y;
 
-                // TODO: a const value for epsilon
-                if (resolution < 0.001)
+                if (resolution < std::numeric_limits<double>::epsilon())
                 {
                     return false;
                 }
@@ -55,7 +56,7 @@ namespace lidar_processing
 
             bool updateEgoShift(double ego_x, double ego_y)
             {
-                if (updated_)
+                if (initialized_)
                 {
                     double delta_ego_x = grid_meta_data_.origin_x + static_cast<double>(grid_meta_data_.dim_x) / 2.0 * grid_meta_data_.resolution - ego_x;
                     double delta_ego_y = grid_meta_data_.origin_y + static_cast<double>(grid_meta_data_.dim_y) / 2.0 * grid_meta_data_.resolution - ego_y;
@@ -78,35 +79,24 @@ namespace lidar_processing
                 {
                     grid_meta_data_.origin_x = ego_x - static_cast<double>(grid_meta_data_.dim_x) / 2.0 * grid_meta_data_.resolution;
                     grid_meta_data_.origin_y = ego_y - static_cast<double>(grid_meta_data_.dim_y) / 2.0 * grid_meta_data_.resolution;
-                    updated_ = true;
+                    initialized_ = true;
                 }
                 return true;
             };
 
-            bool updateFromImage(const PixelType* image, const GridMetaData& image_grid_meta)
+            inline size_t size()
             {
-                // pre-check resolution, TODO: a const value for epsilon
-                if (fabs(image_grid_meta.resolution - grid_meta_data_.resolution) > 0.001)
-                {
-                    std::cout << "The resolution between grid map and image does not match." << std::endl;
-                    return false;
-                }
+                return grids_.size();
+            }
 
-                int dim_offset_x = static_cast<int>((image_grid_meta.origin_x - grid_meta_data_.origin_x) / grid_meta_data_.resolution);
-                int dim_offset_y = static_cast<int>((image_grid_meta.origin_y - grid_meta_data_.origin_y) / grid_meta_data_.resolution);
+            inline const CellType& at(size_t cell_idx) const
+            {
+                return grids_.at(cell_idx);
+            }
 
-                for (size_t cell_idx = 0; cell_idx < grids_.size(); cell_idx++)
-                {
-                    int image_idx_x = static_cast<int>(cell_idx % grid_meta_data_.dim_x) - dim_offset_x;
-                    int image_idx_y = static_cast<int>(cell_idx % grid_meta_data_.dim_y) - dim_offset_y;
-                    if (image_idx_x < 0 || image_idx_x > image_grid_meta.dim_x 
-                     || image_idx_y < 0 || image_idx_y > image_grid_meta.dim_y)
-                    {
-                        continue;
-                    }
-                    cell_updator_(grids_.at(cell_idx), image[image_idx_y * image_grid_meta.dim_x + image_idx_x]);
-                }
-                return true;
+            inline CellType& at(size_t cell_idx)
+            {
+                return grids_.at(cell_idx);
             }
 
         private:
@@ -180,8 +170,6 @@ namespace lidar_processing
             
             std::vector<CellType> grids_;
 
-            bool updated_;
-
-            CellUpdator cell_updator_;
+            bool initialized_;
     };
 }
