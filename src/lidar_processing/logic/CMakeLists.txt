@@ -5,4 +5,4 @@ add_subdirectory(lidar_stixel_data_container)
 add_subdirectory(lidar_stixel_data_segmentation)
 
 add_subdirectory(grid_map)
-add_subdirectory(consistency_grid)
+add_subdirectory(consistency_grid_map_updator)
